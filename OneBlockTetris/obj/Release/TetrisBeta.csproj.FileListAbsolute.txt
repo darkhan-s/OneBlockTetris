@@ -1,0 +1,20 @@
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\bin\Release\TetrisBeta.exe.config
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\bin\Release\TetrisBeta.exe
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\bin\Release\TetrisBeta.pdb
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.Form1.resources
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.Properties.Resources.resources
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.csproj.GenerateResource.Cache
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.csproj.CoreCompileInputs.cache
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.exe
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.pdb
+C:\Users\Darkhan\Desktop\source\repos\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.csprojResolveAssemblyReference.cache
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\bin\Release\TetrisBeta.exe.config
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\bin\Release\TetrisBeta.exe
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\bin\Release\TetrisBeta.pdb
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.csprojAssemblyReference.cache
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.Form1.resources
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.Properties.Resources.resources
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.csproj.GenerateResource.cache
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.csproj.CoreCompileInputs.cache
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.exe
+Y:\D\40_Documents\Private\Dundee docs\OneBlockTetris\OneBlockTetris\obj\Release\TetrisBeta.pdb

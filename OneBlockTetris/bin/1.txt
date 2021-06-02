@@ -1,0 +1,295 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Diagnostics;
+using System.IO;
+
+namespace TetrisBeta
+{
+public partial class Form1 : Form
+{
+    private Color[] blockEmptyColor;
+    private Timer timer;  
+    private int m;
+    private int fallingPiece;
+    private int n;
+    public Timer Form1Timer { get { return timer; } }
+    string directory = System.IO.Directory.GetCurrentDirectory();
+    private bool[] blocksFilled;
+    public Form1()
+    {
+        InitializeComponent();
+        // initializing a timer and setting its properties
+        timer = new Timer();
+        timer.Enabled = true;
+        timer.Interval = 100;
+        timer.Stop();
+        timer.Tick += new System.EventHandler(TimerTickEvent); // each tick calls TimerTickEvent event
+        blockEmptyColor = new Color[2];
+
+        blocksFilled = new bool[40];
+
+        fallingPiece = -3; //we want the falling piece to start at the center of the playground
+
+        blockEmptyColor[0] = System.Drawing.Color.SaddleBrown; //Defining the colors of the block if empty or filled with a falling piece
+        blockEmptyColor[1] = System.Drawing.Color.ForestGreen;
+
+        foreach (Label label in BlockLabels) //reset all the blocks that are not in use
+        {
+            label.BackColor = blockEmptyColor[0];
+        }
+
+        m = Int32.Parse(System.IO.File.ReadAllText(@directory + "WriteText.txt"));
+        label3.Text = m.ToString();
+            
+
+    }
+    //we will create a new event
+    //here we define the movement of the falling piece
+    private void TimerTickEvent(object sender, EventArgs e)
+    {
+        fallingPiece += 5;
+
+        if (fallingPiece < 35)
+        {
+            if(BlockLabels[fallingPiece].BackColor == blockEmptyColor[1])
+            {
+                fallingPiece = 2;
+            }
+        }
+        //the falling piece appears here, at the second tile
+        if(fallingPiece == 2)
+        {
+            int amount = 0;
+            foreach(Label block in BlockLabels)
+            {
+                if(block.BackColor == blockEmptyColor[1])
+                {
+                    blocksFilled[amount] = true;
+                }
+                amount++;
+            }
+
+        }
+
+        if (fallingPiece > 40)
+        {
+            fallingPiece = 2;
+        }
+
+        if (fallingPiece < 40)
+        {
+            if (BlockLabels[fallingPiece].BackColor == blockEmptyColor[0])
+            {
+                blockLabels[fallingPiece].BackColor = blockEmptyColor[1];
+                if (fallingPiece > 5)
+                {
+                    blockLabels[fallingPiece - 5].BackColor = blockEmptyColor[0];
+                }
+            }
+        }
+        //the lowest row is removed if it is filled completely
+
+            if(BlockLabels[35].BackColor == blockEmptyColor[1] &&
+                BlockLabels[36].BackColor == blockEmptyColor[1] &&
+                BlockLabels[37].BackColor == blockEmptyColor[1] &&
+                BlockLabels[38].BackColor == blockEmptyColor[1] &&
+                BlockLabels[39].BackColor == blockEmptyColor[1])
+            {
+                //clear the filled line
+                BlockLabels[35].BackColor = blockEmptyColor[0]; 
+                BlockLabels[36].BackColor = blockEmptyColor[0]; 
+                BlockLabels[37].BackColor = blockEmptyColor[0]; 
+                BlockLabels[38].BackColor = blockEmptyColor[0]; 
+                BlockLabels[39].BackColor = blockEmptyColor[0];
+                //collecting the score value into the label2
+                //n is our counter for the current score
+                n++;
+                label2.Text = n.ToString();
+
+            //writing the highest score to the file
+            if (n > m)
+            {
+                m = n;
+                label3.Text = m.ToString();
+                File.WriteAllText(@directory + "WriteText.txt", m.ToString());
+            }
+
+            blocksFilled = new bool[40];
+            int amountBlocks = 0;
+
+            //sets Green to true
+            foreach(Label block in BlockLabels)
+            {
+                if(block.BackColor == blockEmptyColor[1])
+                {
+                    blocksFilled[amountBlocks + 5] = true; //blocks are five indexes down now
+                }
+                amountBlocks++;
+                    
+            }
+
+            //make all blocks empty
+            foreach (Label block in BlockLabels)
+            {
+                block.BackColor = blockEmptyColor[0];
+            }
+
+            //bring the pieces down
+            int amountGreen = 0;
+            foreach(bool blockFilled in blocksFilled)
+            {
+                if(blockFilled == true)
+                {
+                    BlockLabels[amountGreen].BackColor = blockEmptyColor[1];
+                }
+                amountGreen++;
+                    
+            }
+
+            if (fallingPiece < 40) //
+            {
+                if(BlockLabels[fallingPiece].BackColor == blockEmptyColor[0])
+                {
+                    BlockLabels[fallingPiece].BackColor = blockEmptyColor[1];
+                    if (fallingPiece > 5)
+                    {
+                        BlockLabels[fallingPiece - 5].BackColor = blockEmptyColor[0];
+                    }
+                }
+            }
+
+            //sound effect when the row is eliminated
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@directory+"punch.wav");
+            player.Play();
+            }
+           
+
+        //when blocks reach the top
+        if (BlockLabels[2].BackColor == blockEmptyColor[1] && BlockLabels[2+5].BackColor == blockEmptyColor[1])
+        {
+            timer.Stop();
+            DialogResult quitOrContinue = MessageBox.Show("Game over!"+"Your score is "+ n.ToString()+" "+".Wanna Play Again?", "Game over", MessageBoxButtons.YesNo);
+            if (quitOrContinue == DialogResult.Yes)
+            {
+                foreach(Label block in BlockLabels)
+                {
+                    block.BackColor = blockEmptyColor[0];
+                }
+                blocksFilled = new bool[40];
+                fallingPiece = -3;
+                timer.Start();
+                n = 0;
+                label2.Text = "0";
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
+        }
+    }
+        
+    //controlling the tetris block with arrow keys
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        //left arrow key
+        //timer condition is needed in case if the game is stopped and player is trying to press the keys
+        if (keyData == Keys.Left && timer.Enabled)
+        {
+                
+            if(fallingPiece<39 && blocksFilled[fallingPiece] == false)
+            {
+                //we want to make sure that the tetris block doesnt exceed the grid and get outside the dimensions
+                if(fallingPiece != 0 && fallingPiece != 5 && fallingPiece != 10
+                    && fallingPiece != 15 && fallingPiece != 20 && fallingPiece != 25
+                    && fallingPiece != 30 && fallingPiece != 35 && BlockLabels[fallingPiece - 1].BackColor != blockEmptyColor[1])
+                {
+                    fallingPiece--;
+                    BlockLabels[fallingPiece].BackColor = blockEmptyColor[1];
+                    BlockLabels[fallingPiece + 1].BackColor = blockEmptyColor[0];
+                    return true;
+                }
+            }
+        }
+        //right arrow key
+        if (keyData == Keys.Right && timer.Enabled)
+        {
+            if (fallingPiece < 39 && blocksFilled[fallingPiece] == false)
+            {
+                if (fallingPiece != 0 && fallingPiece != 4 && fallingPiece != 9
+                    && fallingPiece != 14 && fallingPiece != 19 && fallingPiece != 24
+                    && fallingPiece != 29 && fallingPiece != 34 && BlockLabels[fallingPiece + 1].BackColor != blockEmptyColor[1])
+                {
+                    fallingPiece++;
+                    BlockLabels[fallingPiece].BackColor = blockEmptyColor[1];
+                    BlockLabels[fallingPiece - 1].BackColor = blockEmptyColor[0];
+                    return true;
+                }
+            }
+        }
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
+
+    private void menuToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        timer.Stop();
+    }
+
+    private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        timer.Stop(); 
+        DialogResult help1 = MessageBox.Show("The game rules are based on the famous Tetris game, but in this game you have to fill the last row with one-block-sized blocks in order to eliminate the row. Beat the highest score!", "Help", MessageBoxButtons.OK);
+        if (help1 == DialogResult.OK)
+        {
+            timer.Stop();
+        }
+        else
+        {
+            Environment.Exit(0);
+        }
+    }
+
+    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        timer.Stop();
+        DialogResult About = MessageBox.Show("This game has been developed as a part of the coursework assignment for Computer Systems class by Darkhan Saidnassimov and Nurbek Saidnassim, 2018", "About", MessageBoxButtons.OK);
+
+        if (About == DialogResult.OK)
+        {
+            timer.Stop();
+        }
+        else
+        {
+            Environment.Exit(0);
+        }
+    }
+
+    private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Environment.Exit(0);
+    }
+
+    private void startToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        timer.Start();
+    }
+    private void restartToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        foreach (Label block in BlockLabels)
+        {
+            block.BackColor = blockEmptyColor[0];
+        }
+        blocksFilled = new bool[40];
+        fallingPiece = -3;
+        timer.Start();
+        n = 0;
+        label2.Text = "0";
+    }
+}
+}
